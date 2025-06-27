@@ -1659,3 +1659,10 @@ input, select, textarea {
 		body.is-preload #footer {
 			opacity: 0;
 		}
+
+#header nav ul li {
+  margin-left: 1.5rem;
+}
+#header nav ul li:first-child {
+  margin-left: 0;
+}
