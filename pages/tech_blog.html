@@ -170,10 +170,26 @@
         <div class="nav-container">
             <ul class="nav-links">
                 <li><a href="../index.html">Home</a></li>
-                <li><a href="tech_blog.html" class="active">Tech Blog</a></li>
+                <li><a href="tech_blog.html">Tech Blog</a></li>
             </ul>
         </div>
     </nav>
+    <script>
+      // Highlight the correct nav link based on the current URL
+      document.addEventListener('DOMContentLoaded', function() {
+          const navLinks = document.querySelectorAll('.nav-links a');
+          const current = window.location.pathname.replace(/\\/g, '/');
+          navLinks.forEach(function(link) {
+          // Remove any existing 'active'
+          link.classList.remove('active');
+          // Normalize href for comparison
+            const href = link.getAttribute('href');
+            if (href && (current.endsWith(href) || current.endsWith('/' + href))) {
+            link.classList.add('active');
+          }
+        });
+      });
+    </script>
     <div class="blog-hero">
         <h1>My Tech Blog</h1>
         <p>Insights, tutorials, and stories from my journey in software engineering, backend development and AI.</p>
