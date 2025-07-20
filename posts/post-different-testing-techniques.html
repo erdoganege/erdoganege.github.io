@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Testing | Ege Erdogan</title>
+  <link rel="stylesheet" href="/assets/css/post.css">
+  <link rel="icon" href="/images/icons8-book-32.png" type="image/x-icon">
+</head>
+<body>
+  <div class="blog-container">
+    <a href="tech_blog_main_page.html" class="back-link" rel="noopener noreferrer">&larr; Back to Blog</a>
+
+    <h1>Different Testing Techniques as a developer</h1>
+    <div class="post-meta">
+      <span class="meta-item">🗓️ 20 July 2025</span>
+      <span class="meta-dot">&bull;</span>
+      <span class="meta-item">⏱️ 5 min read</span>
+      <span class="meta-dot">&bull;</span>
+      <span class="meta-item">✍️ Ege Erdogan</span>
+    </div>
+    <div id="toc" class="table-of-contents"></div>
+    <div class="warning-box">
+      ⚠️ <strong>Note:</strong> Everything I share is based on my own experience and what I've learned.
+      These are not guaranteed to be the only correct answers—always think critically and consult other sources.
+    </div>
+
+  <h2 id="unit-testing">What are Unit Tests?<a class="anchor-link" href="#unit-testing" aria-label="Link to this section">🔗</a></h2>
+  <p>
+    The first, powerful and most straightforward testing type can be <span style="color:#4db8ff">unit-testing</span>.
+    However, I still see some misunderstandings on how to apply them.
+    The main idea is to write tests inside your application while targeting small parts. Unit-tests
+    live inside your project. <strong>The things that you need be careful:</strong>
+    <ul>
+      <li>Unit-tests should focus on specific unit/functionality in your code. i.e. Do not try to test multiple stuff
+      in a single unit-test.
+        <div class="note-box">
+          👉 Let's say you have an API endpoint called like:
+          <pre><code>GET /tools?filter_name=tool1&page=1&page_size=10</code></pre>
+          You want to write tests whether this API correctly follow filter_name query to only return tools with given prefix,
+          and you also want to be sure that your pagination works fine. Do not write a single unit-test! Just write isolated
+          multiple tests where each one of them focus on single functionality.
+        </div>
+      </li>
+      <li>Do not afraid of writing many unit-tests. You can have duplicate codes to test different functionalities!
+        <div class="note-box">
+          If we follow the previous example, imagine you wrote down a test for each query which ends up in total of 3 tests.
+          You will have a duplicated line where you call this API in each test, but this is totally normal. Avoid duplicated
+          code in the production code, not in your tests :).
+        </div>
+      </li>
+      <li>It is okay to write multiple unit-tests, but never forget to maintenance burden that will bring. Thus, even I said
+      duplicated code is okay, it does not mean your code should be unmaintainable!
+        <div class="note-box">
+          If you are going to call your API in each test, have a dedicated function for your web client. So that if some
+          breaking change happens on your API (e.g. your api path may change), then you will need to only fix 1 line. So,
+          be smart &#128521;
+        </div>
+      </li>
+      <li>
+        Since we focus on specific small units, you should <strong>mock</strong> anything else beside your target.
+      </li>
+      <li>
+        Unit-tests are available inside your project, so you won't be able to test your end product image (i.e. Docker
+        image). Or, alternatively you won't be able to test whether your configmap of kubernetes deployment is really respected
+        by the application or not.
+      </li>
+    </ul>
+  </p>
+
+  <h2 id="ct-testing">What are Component Tests?<a class="anchor-link" href="#ct-testing" aria-label="Link to this section">🔗</a></h2>
+  <p>
+    The second level of tests can be <span style="color:#4db8ff">component tests</span>.
+    Component tests' scope is a single service itself not just a function
+    of the application like unit tests. Thus, you actually need to deploy your service. However, mock everything outside
+    of your service.
+    <div class="note-box">
+      👉 Let's say you have a microservice A which interacts with microservice B, and if you want to write a component
+    test for microservice A. Just deploy microservice A, and mock any expected response from microservice B.
+    </div>
+  </p>
+
+  <h2 id="system-testing">What are System (Integration) Tests?<a class="anchor-link" href="#system-testing" aria-label="Link to this section">🔗</a></h2>
+  <p>
+    The third level and the one with the most coverage is <span style="color:#4db8ff">system (integration) tests</span>.
+    In these tests, you need to deploy  your product as a whole.
+    i.e. Deploy all microservices, deploy any Identity and Access Management (IAM) component.
+    The idea of integration tests are to test <strong>business cases</strong>. Show interactions across different services,
+    and prove that you achieved expected results for your features.
+    <div class="note-box">
+      👉 Let's say you were implementing a feature about "adding users".
+      Your tests may show:
+      <ul>
+        <li>You are able to add user from microservice A's API</li>
+        <li>You are able to retrieve user from microservice B's API</li>
+      </ul>
+    But, do not try to cover all edge cases of "retrieving user API of microservice B" from system-tests. You should cover
+    edge cases in your unit-tests and component-tests. Integration tests should show that interactions between different
+    services work as expected, <strong>not</strong> a single service's feature works as expected.
+    </div>
+  </p>
+  <h2 id="load-testing">What are Load Tests?<a class="anchor-link" href="#load-testing" aria-label="Link to this section">🔗</a></h2>
+    <p>
+      <span style="color:#4db8ff">Load tests</span> are used to check <strong>performance</strong> of the whole system under some expected load.
+      Thus, you need to deploy everything in your product similar to integration tests.
+    <div class="note-box">
+      👉 Let's say you expect around 10k users to call one of your APIs at the same time. Then, you need to call your API
+    10k times simultaneously, and note down your performance metrics such as response times, http codes, resource usages.
+    </div>
+    <div class="note-box">
+      If you go further than your expected users load to the point of breaking your system, load tests become something called
+      <span style="color:#4db8ff">stress testing</span>. In this case, the idea is to observe what happens when your system breakdowns, and how it recovers.
+    </div>
+    </p>
+
+  <h2 id="fuzzy-testing">What are Fuzz (Fuzzy) Tests?<a class="anchor-link" href="#fuzz-testing" aria-label="Link to this section">🔗</a></h2>
+    <p>
+      Although I did not write a fuzz test in my work environment, I worked with it during one of my master course. Thus, I
+      can talk about it 😆
+      Fuzzy testing is all about bombarding your system with unexpected, weird, broken, random inputs. The overall idea
+      is to see behavior of your application under unexpected inputs.
+    <div class="note-box">
+      An application should not crash, freeze or shout out different exceptions under weird inputs from user.
+      Example input of such fuzz test can be: <strong>@@*?@###\x00\xFF</strong>
+    </div>
+    Fuzz tests usually use specific program to create large volumes of these weird inputs.
+    Then, these tools record behavior of your application, alongside with their memory states to ensure there is no memory leaks too.
+    </p>
+
+  <div class="warning-box">
+    ⚠️ <strong>Note:</strong> I know that there are more different testing techniques than these above ones. However, I did not need
+    to touch other techniques as a backend developer, so I don't have experiences on them. That's why I did not talk about
+    them. You can just google "software testing techniques", and see numerous techniques 😤
+  </div>
+
+  <h2 id="practices">Some Personal Real Life Practices<a class="anchor-link" href="#practices" aria-label="Link to this section">🔗</a></h2>
+  <p>
+  <ul>
+    <li>Writing tests are as much important as implementing your feature!</li>
+    <li>Run regular load tests. You may introduce some memory leaks accidentally while doing small updates on your code.
+    You can easily catch these with regular load test.</li>
+    <li>Try to make your system (integration) tests <strong>documentable</strong> in a way that you can share with non-developers to showcase your feature's capabilities.</li>
+    <li>Proper usage of mocking is important!</li>
+    <li>Although system tests' scope corresponds to full system deployment, this may not be possible always, or
+    can be expensive approach. Thus, you can focus on more fine granulated way for your system. For instance, you may skip
+    deploying some applications if you think they are not directly interacting with your group of application although you deliver
+    them in your product.</li>
+    <li>One good way to review other developer's merge requests is checking their tests as a first step without looking their main code.
+      Thus, you can have an idea about what they are trying to achieve in their code, and which edge cases they think they covered.</li>
+    <li>Testing your configuration parameters are respected by your application is really important! For example, you may
+    have an configuration flag which enable user to use database connections with TLS. You may think that you implemented
+    everything correctly for it, but if your application does not follow your simple true/false flag, anything go wrong!
+    This is especially a problem for cloud deployable application where there can be multi step configuration passing into application
+    such s-as kubernetes configmaps/secrets, default configuration values and so on.</li>
+    <li>You can go even further and check <span style="color:#4db8ff">Test Driven Development (TDD)</span> in detail.</li>
+  </ul>
+  </p>
+  </div>
+<script src="/assets/js/toc.js" defer></script>
+</body>
+</html>
