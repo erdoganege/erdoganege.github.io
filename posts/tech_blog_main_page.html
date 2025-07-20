@@ -195,5 +195,41 @@
         <p>Insights, tutorials, and stories from my journey in software engineering, backend development and AI.<br>
         You can tell from my language and the number of mistakes that these weren’t written by ChatGPT &#128521;</p>
     </div>
+    <div class="blog-container">
+        <div class="tag-filter">
+            <span class="tag active" data-tag="all">All</span>
+            <span class="tag" data-tag="AI">Artificial Intelligence</span>
+            <span class="tag" data-tag="backend">Backend</span>
+            <span class="tag" data-tag="academic">Paper Reviews</span>
+        </div>
+        <section class="blog-list">
+            <div class="blog-card" data-tags="backend">
+                <h3>Software Development Testing Techniques</h3>
+                <div class="meta">July 2025 &bull; 5 min read</div>
+                <div class="tags">
+                    <span class="tag">Backend</span>
+                </div>
+                <p>Exploring different software development testing techniques which I touched while working as a backend developer.</p>
+                <a href="post-different-testing-techniques.html">Read More</a>
+            </div>
+        </section>
+    </div>
+    <script>
+        document.querySelectorAll('.tag-filter .tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                document.querySelectorAll('.tag-filter .tag').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const selected = this.getAttribute('data-tag');
+                document.querySelectorAll('.blog-card, .featured-post').forEach(card => {
+                    const tags = card.getAttribute('data-tags') || '';
+                    if (selected === 'all' || tags.includes(selected)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
