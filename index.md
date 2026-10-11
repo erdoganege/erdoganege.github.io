@@ -1,9 +1,13 @@
 ---
 layout: page
 title: Ege Erdogan
-subtitle: Your role, e.g. Data Engineer based in Germany
+subtitle: Software Engineer based in Germany
 ---
 
-A short summary about you in two or three sentences. What you do, what you care about, what you're looking for.
+I'm a software engineer at KOBIL Systems, where I build Rust and Kotlin microservices for a production platform serving over 5 million users.
+My day-to-day work covers event-driven architectures with Kafka, Kubernetes deployments, and observability with OpenTelemetry and Grafana.
 
-[Download my resume](/assets/resume.pdf)
+I hold an M.Sc. in Computer Science from the University of Bonn, specializing in AI for cybersecurity, 
+and a B.Sc. in Electronics Engineering with a double major in Computer Science from Sabanci University.
+
+[Download my resume](/assets/files/resume.pdf)
